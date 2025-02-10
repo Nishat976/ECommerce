@@ -1,23 +1,24 @@
-import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom";
-import { Product } from "../../models/product";
 import { Button, Divider, Grid2, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from "@mui/material";
+import { useFetchProductDetailsQuery } from "./catalogAPI";
 
 
 
 export default function ProductDetails() {
 
-  const [product,setProduct] = useState<Product | null>(null);
+  // const [product,setProduct] = useState<Product | null>(null);
 const {id} = useParams();
 
-useEffect( () =>{
-  fetch(`https://localhost:7106/api/products/${id}`)
-  .then(response => response.json())
-  .then(data => setProduct(data))
-  .catch(error => console.error(error));
-}, [id])
+// useEffect( () =>{
+//   fetch(`https://localhost:7106/api/products/${id}`)
+//   .then(response => response.json())
+//   .then(data => setProduct(data))
+//   .catch(error => console.error(error));
+// }, [id])
 
-if(!product) return <div>Loading...</div>
+const {data:product ,isLoading} = useFetchProductDetailsQuery(id ? +id: 0);
+
+if(!product || isLoading) return <div>Loading...</div>
 
 const productDetails = [
   {lable:'Name',value:product.name},
@@ -27,7 +28,9 @@ const productDetails = [
   {lable:'Type',value:product.type},
  
 ]
+
   return (
+    
 
     <Grid2 container spacing={6} maxWidth='lg' sx={{mx:'auto'}}>
       <Grid2 size={6}>
